@@ -7,7 +7,7 @@ if (!defined("__INSTALLDIR__")) {
 
 class Config
 {
-    const VERSION = '@phd_version@';
+    const VERSION = '1.1.10';
 
     private static $optionArrayDefault = array(
         'output_format'     => array(),
