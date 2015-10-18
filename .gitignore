@@ -1,5 +1,7 @@
+composer.lock
 output
 tags
+vendor/
 *.swp
 *.tgz
 *.tar
