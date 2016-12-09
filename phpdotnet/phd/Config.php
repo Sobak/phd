@@ -1,10 +1,6 @@
 <?php
 namespace phpdotnet\phd;
 
-if (!defined("__INSTALLDIR__")) {
-    define("__INSTALLDIR__", "@php_dir@" == "@"."php_dir@" ? dirname(dirname(__DIR__)) : "@php_dir@");
-}
-
 class Config
 {
     const VERSION = '1.1.10';
@@ -52,7 +48,7 @@ class Config
 		),
         'process_xincludes' => false,
         'ext'               => null,
-        'package_dirs'      => array(__INSTALLDIR__),
+        'package_dirs'      => array(__DIR__),
         'saveconfig'        => false,
         'quit'              => false,
         'indexcache'        => '',

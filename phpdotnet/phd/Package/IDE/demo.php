@@ -2,11 +2,10 @@
 <?php
 use phpdotnet\phd as PhD;
 
-define('__INSTALLDIR__', '@php_dir@' == '@'.'php_dir@' ? dirname(dirname(dirname(dirname(__DIR__)))) : '@php_dir@');
 define('DS', DIRECTORY_SEPARATOR);
 
-require __INSTALLDIR__ . DS . 'phpdotnet' . DS . 'phd' . DS . 'Autoloader.php';
-require __INSTALLDIR__ . DS . 'phpdotnet' . DS . 'phd' . DS . 'functions.php';
+require __DIR__ . DS . 'phpdotnet' . DS . 'phd' . DS . 'Autoloader.php';
+require __DIR__ . DS . 'phpdotnet' . DS . 'phd' . DS . 'functions.php';
 
 spl_autoload_register(array("phpdotnet\\phd\\Autoloader", "autoload"));
 
