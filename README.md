@@ -1,5 +1,5 @@
 # PhD: PHP DocBook Rendering System
-###### Copyright(c) 2007-2015 The PHP Documentation Team
+###### Copyright(c) 2007-2016 The PHP Documentation Team
 -----
 
 PhD is PHP's very own DocBook 5 rendering system. It is used to convert the PHP
@@ -13,6 +13,12 @@ do is execute following command:
 ```
 composer global require php/phd
 ```
+
+> Remember that you need to add `~/.composer/vendor/bin` (or its Windows counterpart)
+> to your `PATH`.
+
+### Installation for local development
+You can just clone this repository and run either `bin/phd` or `render.php` directly.
 
 The minimal required PHP version is 5.3 with these extensions enabled: DOM, XMLReader
 and SQLite3.
