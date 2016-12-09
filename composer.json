@@ -13,6 +13,7 @@
         },
         {
             "name": "The PHP Documentation Team",
+            "email": "phpdoc@lists.php.net",
             "homepage": "https://github.com/php/phd/graphs/contributors"
         }
     ],
