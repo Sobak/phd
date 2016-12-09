@@ -23,5 +23,8 @@
         "psr-0": {
             "phpdotnet\\": "."
         }
-    }
+    },
+    "bin": [
+        "bin/phd"
+    ]
 }
