@@ -1,7 +1,11 @@
 <?php
 namespace phpdotnet\phd;
 
-require 'vendor/autoload.php';
+if (file_exists('vendor/autoload.php')) {
+    require 'vendor/autoload.php';
+} else {
+    require __DIR__ . '/../../autoload.php';
+}
 
 define("__INSTALLDIR__", __DIR__);
 
