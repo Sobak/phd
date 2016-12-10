@@ -143,7 +143,7 @@ class Config
     public static function getSupportedPackages() {
         $packageList = array();
         foreach(Config::package_dirs() as $dir) {
-            foreach (glob($dir . "/phpdotnet/phd/Package/*", GLOB_ONLYDIR) as $item) {
+            foreach (glob($dir . "/Package/*", GLOB_ONLYDIR) as $item) {
                 $baseitem = basename($item);
                 if ($baseitem[0] != '.') {
                     $packageList[] = $baseitem;
