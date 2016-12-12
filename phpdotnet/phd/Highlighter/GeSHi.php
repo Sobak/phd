@@ -2,8 +2,6 @@
 /**
  * Syntax highlighting using GeSHi, the generic syntax highlighter.
  *
- * PHP version 5.3+
- *
  * @category PhD
  * @package  PhD_GeSHi
  * @author   Christian Weiske <cweiske@php.net>
@@ -12,11 +10,7 @@
  */
 namespace phpdotnet\phd;
 
-/**
- * Yes, geshi needs to be in your include path
- * We use the mediawiki geshi extension package.
- */
-require 'MediaWiki/geshi/geshi/geshi.php';
+use GeSHi;
 
 /**
  * Syntax highlighting using GeSHi, the generic syntax highlighter.
@@ -26,14 +20,13 @@ require 'MediaWiki/geshi/geshi/geshi.php';
  * snippet.
  *
  * This highlighter uses geshi 1.0.x, the stable version as of
- * 2009. It will not work with geshi 1.1.x or 1.2.x.
+ * 2009. It will not work with geshi 1.1.x or 1.2.x development versions.
  *
  * @example
  * Install geshi:
- *  pear channel-discover mediawiki.googlecode.com/svn
- *  pear install mediawiki/geshi
+ *  composer require easybook/geshi
  * Use it:
- *  phd -g 'phpdotnet\phd\Highlighter_GeSHi' -L en -P PEAR -f xhtml -o build/en -d .manual.xml
+ *  phd -g "phpdotnet\phd\Highlighter_GeSHi" -d docs\phd-guide\phd-guide.xml -P Generic -f bigxhtml
  *
  * @category PhD
  * @package  PhD_GeSHi
@@ -77,7 +70,7 @@ class Highlighter_GeSHi extends Highlighter
     */
     public function highlight($text, $role, $format)
     {
-        $geshi = new \GeSHi($text, $role);
+        $geshi = new GeSHi($text, $role);
         $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
         $geshi->set_header_type(GESHI_HEADER_DIV);
         return $geshi->parse_code();

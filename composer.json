@@ -23,6 +23,9 @@
         "ext-sqlite3": "*",
         "ext-xmlreader": "*"
     },
+    "suggest": {
+        "easybook/geshi": "For using GeSHi as code highlighter"
+    },
     "autoload": {
         "psr-0": {
             "phpdotnet\\": "."
