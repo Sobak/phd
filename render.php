@@ -7,11 +7,7 @@ if (file_exists('vendor/autoload.php')) {
     require __DIR__ . '/../../autoload.php';
 }
 
-define("__INSTALLDIR__", __DIR__);
-
-require __INSTALLDIR__ . '/phpdotnet/phd/functions.php';
-
-
+require __DIR__ . '/phpdotnet/phd/functions.php';
 
 $conf = array();
 if (file_exists("phd.config.php")) {
@@ -41,7 +37,7 @@ if (!file_exists(Config::output_dir())) {
 // This needs to be moved. Preferably into the PHP package.
 if (!$conf) {
     Config::init(array(
-        "lang_dir"  => __INSTALLDIR__ . DIRECTORY_SEPARATOR . "phpdotnet" . DIRECTORY_SEPARATOR
+        "lang_dir"  => __DIR__ . DIRECTORY_SEPARATOR . "phpdotnet" . DIRECTORY_SEPARATOR
                         . "phd" . DIRECTORY_SEPARATOR . "data" . DIRECTORY_SEPARATOR
                         . "langs" . DIRECTORY_SEPARATOR,
         "phpweb_version_filename" => Config::xml_root() . DIRECTORY_SEPARATOR . 'version.xml',
