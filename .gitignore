@@ -1,7 +1,6 @@
-composer.lock
 output
 tags
-vendor/
+vendor
 *.swp
 *.tgz
 *.tar
