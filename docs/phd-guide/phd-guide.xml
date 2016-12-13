@@ -18,8 +18,8 @@
 
     <para>The goal of PhD is to become a fast, general DocBook rendering
     system. At the moment of writing, PhD is already very fast: It can create
-    the chunked version of PEAR's manual (some 3000 files) in less than a
-    minute on a 2GHz system. It also renders the PHP and PEAR manual
+    the chunked version of the PHP Manual (over 11000 files) in less than four
+    minutes on a 2GHz system. It also renders both PEAR and PHP manuals
     flawlessly. It does not support every DocBook 5 tag yet, and using it to
     render own DocBook files may need some tweaks.</para>
   </preface>
@@ -27,86 +27,72 @@
   <chapter xml:id="getting-phd">
     <title>Getting PhD</title>
 
-    <para>You might find some other tutorials in the <link
-    linkend="links">links</link> section.</para>
+    <para>
+      You might find some other tutorials in the <link
+      linkend="links">links</link> section.
+    </para>
 
     <section xml:id="installation">
       <title>Installation</title>
 
-      <para>PhD is distributed via an own PEAR channel,
-      <uri>doc.php.net</uri>. Using it is also the most easy way to get
-      it.</para>
+      <para>
+        PhD is a Composer package published on Packagist under <literal>php/phd</literal>
+        name. <link xlink:href="https://getcomposer.org">Composer</link> is required for
+        both methods of installation described as it's responsible for generating an
+        autoloader.
+      </para>
 
-      <section xml:id="installation-pear">
-        <title>Installation via PEAR</title>
+      <section xml:id="installation-composer">
+        <title>Installation using Composer</title>
 
-        <note>
-          <para>You need a working <link
-          xlink:href="http://pear.php.net/manual/en/installation.php">PEAR
-          installation</link>.</para>
-        </note>
-
-        <para>To install the latest version of PhD:</para>
+        <para>To globally install last stable version of PhD:</para>
 
         <screen>
 <![CDATA[
-$ pear install doc.php.net/phd
+$ composer global require php/phd
 
 ... downloading
 
 $ phd --version
-PhD Version: 1.0.0-stable
-PHP Version: 5.3.3
-Copyright(c) 2007-2010 The PHP Documentation Group
+PhD Version: 1.2.0
+PHP Version: 7.0.5
+Copyright(c) 2007-2016 The PHP Documentation Group
 ]]>
         </screen>
-
-        <para>Installing the PhD Packages:</para>
-
-        <screen>
-<![CDATA[
-$ pear install doc.php.net/phd_php
-Starting to download PhD_PHP-1.0.0.tgz (18,948 bytes)
-[...]
-install ok: channel://doc.php.net/PhD_PHP-1.0.0
-
-$ pear install doc.php.net/phd_pear
-downloading PhD_PEAR-1.0.0.tgz ...
-[...]
-install ok: channel://doc.php.net/PhD_PEAR-1.0.0
-]]>
-        </screen>
-
-        <para>That's it!</para>
       </section>
 
-      <section xml:base="" xml:id="installation-svn">
-        <title>Installation from SVN</title>
+      <section xml:id="installation-git">
+        <title>Installation from Git</title>
 
-        <para>To get the latest and greatest features that have not been
-        released yet, you can use PhD from SVN.</para>
+        <para>
+          To get the latest and greatest features that have not been
+          released yet, you can use PhD from Git (in this case, an
+          official GitHub mirror).
+        </para>
 
         <screen>
 <![CDATA[
-$ svn checkout http://svn.php.net:/repository/phd/trunk phd
+$ git clone https://github.com/php/phd.git
+$ cd phd/
+$ composer install
+
 ... output
 
-pear install package.xml package_generic.xml package_php.xml package_pear.xml 
-[...]
-install ok: channel://doc.php.net/PhD-1.0.1
-install ok: channel://doc.php.net/PhD_Generic-1.0.1
-install ok: channel://doc.php.net/PhD_PHP-1.0.1
-install ok: channel://doc.php.net/PhD_PEAR-1.0.1
-bjori@jessica:/usr/src/php/svn/phd/trunk$ 
+bjori@jessica:/home/bjori/projects/phd/$ 
 
 $ phd --version
-PhD Version: phd-from-svn
-PHP Version: 5.3.3-dev
-Copyright(c) 2007-2010 The PHP Documentation Group
+PhD Version: 1.2.1-dev
+PHP Version: 7.0.5
+Copyright(c) 2007-2016 The PHP Documentation Group
 ]]>
         </screen>
 
-        <para>And now you're done.</para>
+        <para>
+          And now you're done. Please note that this method, unlike the
+          above, results in local installation. You need to call
+          <filename>render.php</filename> or <filename>bin/phd</filename>
+          directly.
+        </para>
       </section>
     </section>
   </chapter>
@@ -121,7 +107,7 @@ Copyright(c) 2007-2010 The PHP Documentation Group
         <title>Getting the PHP Documentation Sources</title>
 
         <para>To get the PHP documentation sources, simply <link
-        xlink:href="http://wiki.php.net/doc/scratchpad/howto/checkout">check them out from SVN</link>
+        xlink:href="http://doc.php.net/tutorial/structure.php">check them out from SVN</link>
         with the following command.</para>
 
         <screen>
@@ -142,7 +128,7 @@ $ svn co http://svn.php.net/repository/phpdoc/modules/doc-en phpdoc
       </sidebar>
 
       <para>To quickly become familiar with using PhD, you can download the
-      PHP documentation sources and render those.Running PhD to render the
+      PHP documentation sources and render those. Running PhD to render the
       docs is surprisingly simple, so we'll start with that.</para>
 
       <screen>
@@ -161,8 +147,8 @@ $ phd -d doc-base/.manual.xml -P PHP
       <screen>
 <![CDATA[
 $ phd --help
-PhD version: 1.1.6
-Copyright(c) 2007-2013 The PHP Documentation Group
+PhD version: 1.2.0
+Copyright(c) 2007-2016 The PHP Documentation Group
 
   -v
   --verbose <int>            Adjusts the verbosity level
@@ -205,7 +191,7 @@ Copyright(c) 2007-2013 The PHP Documentation Group
                              theme). (default: en)
   -c <bool>
   --color <bool>             Enable color output when output is to a terminal
-                             (default: true)
+                             (default: false)
   -C <filename>
   --css <filename>           Link for an external CSS file.
   -g <classname>
@@ -249,6 +235,7 @@ Supported packages:
                 json
                 php
                 phpstub
+                sqlite
         PEAR
                 xhtml
                 bigxhtml
@@ -271,14 +258,6 @@ Supported packages:
 ]]>
       </screen>
 
-      <note>
-        <para>The format packages are provided by separate PEAR packages 
-        (doc.php.net/PhD_Generic, doc.php.net/PhD_IDE, doc.php.net/PhD_PEAR and 
-        doc.php.net/PhD_PHP) where only the Generic is installed by default.
-        </para>
-      </note>
-
-
       <para>You can tell by the output of the <literal>--list</literal> option
       that PhD can also be used to render the docs as a PDF file, or as Unix
       Man Pages.</para>
@@ -295,29 +274,24 @@ Supported packages:
     <section xml:id="render-phd-guide">
       <title>Compiling the PhD guide</title>
 
-      <para>The PhD guide is this manual you are reading currently. It lives
-      in <acronym>PhD</acronym>'s SVN repository under
-      <filename>docs/phd-guide/phd-guide.xml</filename>. If you installed PhD
-      from SVN, you already have it. Otherwise, get it:</para>
+      <para>
+        The PhD guide is this manual you are reading currently. It lives
+        in <acronym>PhD</acronym>'s Git repository under
+        <filename>docs/phd-guide/phd-guide.xml</filename>. Whether you installed PhD
+        from Packagist or Git, you already have it. Now just type:
+      </para>
 
       <screen>
 <![CDATA[
-$ svn checkout http://svn.php.net:/repository/phd/trunk/docs/phd-guide
-U phd/docs/phd-guide/phd-guide.xml
-]]>
-      </screen>
-
-      <para>Now you have everything you need. Just type</para>
-
-      <screen>
-<![CDATA[
-$ cd phd/docs/phd-guide/
+$ cd phd/docs/phd-guide/ # or wherever it lives in your case
 $ phd -f bigxhtml -d phd-guide.xml
 ]]>
       </screen>
 
-      <para>There should be an .html file in the directory now. View it with a
-      browser!</para>
+      <para>
+        There should be an <acronym>HTML</acronym> file in the directory now.
+        View it with a browser!
+      </para>
 
       <para>That's all to say. This way you can render your own docbook files,
       too.</para>
@@ -332,77 +306,77 @@ $ phd -f bigxhtml -d phd-guide.xml
       some of them.</para>
 
       <section xml:id="render-custom-highlighter">
-	<title>Source code highlighter</title>
+        <title>Source code highlighter</title>
 
-	<para>Part of the documentation of programming languages
-	is source code examples. PhD is able to colorize the source
-	code of many types of source code with the help of
-	<emphasis>highlighters</emphasis>.</para>
+        <para>Part of the documentation of programming languages
+        is source code examples. PhD is able to colorize the source
+        code of many types of source code with the help of
+        <emphasis>highlighters</emphasis>.</para>
 
-	<para>To utilize syntax highlighting, your opening
-	<literal>&lt;programlisting&gt;</literal> tags need a
-	<literal>role</literal> attribute describing the type
-	of source code. Examples are <literal>php</literal>,
-	<literal>html</literal> and <literal>python</literal>.</para>
+        <para>To utilize syntax highlighting, your opening
+        <literal>&lt;programlisting&gt;</literal> tags need a
+        <literal>role</literal> attribute describing the type
+        of source code. Examples are <literal>php</literal>,
+        <literal>html</literal> and <literal>python</literal>.</para>
 
-	<note>
-	  <para>PhD currently only highlights the code if it is embedded
-	  in a <literal>CDATA</literal> section.</para>
-	</note>
+        <note>
+          <para>PhD currently only highlights the code if it is embedded
+          in a <literal>CDATA</literal> section.</para>
+        </note>
 
-	<example>
-	  <title>A programlisting tag with a role</title>
-	  <programlisting role="xml"><![CDATA[<programlisting role="php"><![CDATA[
+        <example>
+          <title>A programlisting tag with a role</title>
+          <programlisting role="xml"><![CDATA[<programlisting role="php"><![CDATA[
 <?php
 echo "Hello world!";
 ?>
 ]]>]]&gt;&lt;/programlisting&gt;
-	  </programlisting>
-	</example>
+          </programlisting>
+        </example>
 
-	<para>By default, PhD uses the source code highlighter that
-	is built into PHP itself. It is only able to highlight PHP code
-	and nothing else.</para>
+        <para>
+          By default, PhD uses the source code highlighter that
+          is built into PHP itself. It is only able to give basic
+          highlighting of PHP code and nothing else.
+        </para>
 
-	<para>If your documentation contains other types of source code
-	or markup, like XML, HTML, Javascript or any other language,
-	you should try the
-	<link xlink:href="http://qbnz.com/highlighter/">GeSHi</link>
-	highlighter that is shipped with PhD:</para>
+        <para>
+          If you want to use more advanced Highlighter or if your
+          documentation contains other types of source code
+          or markup, like XML, HTML, Javascript or any other language,
+          you should try the
+          <link xlink:href="http://qbnz.com/highlighter/">GeSHi</link>,
+          which is supported by PhD.
+        </para>
 
-	<orderedlist>
-	  <listitem>
-	   <para>
-	    Install GeSHi from the MediaWiki PEAR channel:
-	   </para>
-	   <screen><![CDATA[$ pear channel-discover mediawiki.googlecode.com/svn
-$ pear install mediawiki/geshi]]></screen>
-	  </listitem>
+        <orderedlist>
+          <listitem>
+          <para>
+            Install GeSHi from the Packagist:
+          </para>
+          <screen><![CDATA[$ composer require easybook/geshi]]></screen>
+          <para>
+            Make sure to use <literal>composer global require</literal> if you
+            installed PhD globally - it has to be consistent.
+          </para>
+          </listitem>
 
-	  <listitem>
-	   <para>
-	    Use the GeSHi syntax highlighting class when rendering your
-	    documentation:
-	   <screen><![CDATA[$ phd -g 'phpdotnet\phd\Highlighter_GeSHi' -d phd-guide.xml]]></screen>
-	   </para>
-	  </listitem>
-	</orderedlist>
+          <listitem>
+          <para>
+            Use the GeSHi syntax highlighting class when rendering your
+            documentation:
+          <screen><![CDATA[$ phd -g "phpdotnet\phd\Highlighter_GeSHi" -d phd-guide.xml]]></screen>
+          </para>
+          </listitem>
+        </orderedlist>
 
-	<para>If you have GeSHi version 1.1.x installed, you should use
-	the <literal>phpdotnet\phd\Highlighter_GeSHi11x</literal> highlighter,
-	which is adapted to GeSHi's new API.
-	</para>
-
-	<para>Apart from using the highlighter shipped with PhD, you
-	can
-	<link linkend="phd-extension-highlighter">build your own highlighters</link>.
-	</para>
+        <para>Apart from using the highlighter shipped with PhD, you
+        can
+        <link linkend="phd-extension-highlighter">build your own highlighters</link>.
+        </para>
       </section>
-
     </section>
-
   </chapter>
-
 
   <chapter xml:id="docbook-extensions">
     <title>DocBook extensions</title>
@@ -658,10 +632,8 @@ $ pear install mediawiki/geshi]]></screen>
       and expects the highlighted source code to be returned in whatever
       format the current rendering format is expected to be.</para>
 
-      <para>Take a look at the provided highlighters,
-      <literal>phpdotnet\phd\Highlighter</literal>,
-      <literal>phpdotnet\phd\Highlighter_GeSHi</literal> and
-      <literal>phpdotnet\phd\Highlighter_GeSHi11x</literal>.
+      <para>Take a look at the highlighters provided in
+      <filename>phpdotnet\phd\Highlighter</filename> directory.
       They will serve as good examples how to implement your own
       highlighter.</para>
 
@@ -681,7 +653,7 @@ $ pear install mediawiki/geshi]]></screen>
     <itemizedlist>
       <listitem>
         <para><link
-        xlink:href="http://elizabethmariesmith.com/2009/02/setting-up-phd-on-windows/">Setting
+        xlink:href="http://elizabethmariesmith.com/setting-up-phd-on-windows/">Setting
         up PhD on Windows</link> by Elizabeth Marie Smith (PhD 0.4.5)</para>
       </listitem>
 

@@ -17,11 +17,12 @@ composer global require php/phd
 > Remember that you need to add `~/.composer/vendor/bin` (or its Windows counterpart)
 > to your `PATH`.
 
-### Installation for local development
-You can just clone this repository and run either `bin/phd` or `render.php` directly.
-
 The minimal required PHP version is 5.3 with these extensions enabled: DOM, XMLReader
 and SQLite3.
+
+### Installation for local development
+You can just clone this repository, `composer install` it and then run either `bin/phd`
+or `render.php` directly.
 
 ## Usage
 After installing PhD you can use the `phd` command
@@ -30,3 +31,8 @@ use the `phd -l` command. By default `phd` use `./output` for the rendered files
 
 The `phd` command optionally takes more arguments.
 For information about those arguments please type `phd -h`
+
+## Documentation and more
+For changelog and more detailed documentation, please visit the [PhD Homepage][homepage]
+
+[homepage]: http://doc.php.net/phd/
