@@ -83,6 +83,7 @@ class Index extends Format
         'phpdoc'            => 'PI_PHPDOCHandler',
     );
 
+    private $bookMemberships = array();
     private $chunks    = array();
     private $isChunk   = array();
     private $previousId = "";
@@ -185,6 +186,10 @@ CREATE TABLE ids (
     previous TEXT,
     next TEXT,
     chunk INTEGER
+);
+CREATE TABLE books (
+    book_id TEXT,
+    membership TEXT
 );
 CREATE TABLE changelogs (
     membership TEXT, -- How the extension in distributed (pecl, core, bundled with/out external dependencies..)
@@ -328,6 +333,11 @@ SQL;
     public function format_container_chunk($open, $name, $attrs, $props) {
         if ($open) {
             if ($name == "book") {
+                // Save book membership if we are parsing book.* ID
+                $bookID = $attrs[Reader::XMLNS_XML]['id'];
+                if (substr($bookID, 0, 5) == 'book.') {
+                    $this->bookMemberships[$bookID] = $this->currentMembership;
+                }
                 $this->currentMembership = null;
             }
             return $this->format_chunk($open, $name, $attrs, $props);
@@ -466,6 +476,21 @@ SQL;
                 }
             }
 
+            // Insert books memberships
+            $this->db->exec('BEGIN TRANSACTION; '.join("", $this->commit).' COMMIT');
+            $log = "";
+            foreach($this->bookMemberships as $book_id => $membership) {
+                $log .= sprintf(
+                    "INSERT INTO books (book_id, membership) VALUES('%s', '%s');\n",
+                    $this->db->escapeString($book_id),
+                    $this->db->escapeString($membership)
+                );
+            }
+            $this->db->exec('BEGIN TRANSACTION; ' . $log. ' COMMIT');
+            $this->log = "";
+            $this->commit = array();
+
+            // Insert changelogs
             $this->db->exec('BEGIN TRANSACTION; '.join("", $this->commit).' COMMIT');
             $log = "";
             foreach($this->changelog as $id => $arr) {

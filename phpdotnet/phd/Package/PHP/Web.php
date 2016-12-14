@@ -187,8 +187,12 @@ $PARENTS = ' . var_export($parents, true) . ';';
         }
         $var = var_export($setup, true);
 
+        $parentBook = self::getBookForChunk($id);
+        $doc_membership = $parentBook ? self::getBookMembership($parentBook) : 'core';
+
         return '<?php
 include_once $_SERVER[\'DOCUMENT_ROOT\'] . \'/include/shared-manual.inc\';
+$DOC_MEMBERSHIP = "' . $doc_membership . '";
 $TOC = array();
 $TOC_DEPRECATED = array();
 $PARENTS = array();
@@ -219,6 +223,46 @@ manual_header();
         file_put_contents($this->getOutputDir() . "search-index.json", json_encode($ids));
         file_put_contents($this->getOutputDir() . "search-description.json", json_encode($desc));
         v("Index written", VERBOSE_FORMAT_RENDERING);
+    }
+
+    /**
+     * Iterates up through the index until it finds the book given chunk belongs to.
+     * If called for a book ID, returns it.
+     * Returns null if chunk doesn't belong to any book
+     */
+    protected function getBookForChunk($id) {
+        if (substr($id, 0, 5) == 'book.') {
+            return $id;
+        }
+
+        while ($id != null && substr($id, 0, 5) != 'book.') {
+            $id = Format::getParent($id);
+        }
+
+        return $id;
+    }
+
+    /**
+     * Fetches membership (pecl, core) for the given book ID. If membership is
+     * undefined, it assumes "core".
+     * Query results are cached.
+     */
+    protected function getBookMembership($bookID) {
+        static $membershipCache;
+
+        if ($membershipCache == null) {
+            $result = $this->sqlite->query('SELECT * FROM books');
+
+            while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+                $membershipCache[$row['book_id']] = $row['membership'];
+            }
+        }
+
+        if (isset($membershipCache[$bookID]) && !empty($membershipCache[$bookID])) {
+            return $membershipCache[$bookID];
+        }
+
+        return 'core';
     }
 
 }
