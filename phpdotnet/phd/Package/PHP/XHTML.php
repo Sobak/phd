@@ -11,8 +11,14 @@ abstract class Package_PHP_XHTML extends Package_Generic_XHTML {
         'chapter'               => 'format_container_chunk',
         'colophon'              => 'format_chunk',
         'function'              => 'format_function',
+        'methodparam'           => 'format_methodparam',
+        'methodsynopsis'        => 'format_methodsynopsis',
         'methodname'            => 'format_function',
         'legalnotice'           => 'format_chunk',
+        'parameter'             => array(
+            /* DEFAULT */          'format_parameter',
+            'methodparam'       => 'format_methodparam_parameter',
+        ),
         'part'                  => 'format_container_chunk',
         'partintro'             => 'format_partintro',
         'preface'               => 'format_chunk',
@@ -103,8 +109,8 @@ abstract class Package_PHP_XHTML extends Package_Generic_XHTML {
             'fieldsynopsis'     => 'format_type_if_object_or_pseudo_text',
             'methodparam'       => 'format_type_if_object_or_pseudo_text',
             'methodsynopsis'    => array(
-                /* DEFAULT */      'format_type_if_object_or_pseudo_text',
-                'classsynopsis' => false,
+                                   'format_type_methodsynopsis_text',
+                'classsynopsis' => 'format_type_methodsynopsis_text',
             ),
         ),
         'titleabbrev'           => array(
@@ -148,6 +154,13 @@ abstract class Package_PHP_XHTML extends Package_Generic_XHTML {
         'dbhtml'        => 'PI_DBHTMLHandler',
         'dbtimestamp'   => 'PI_DBHTMLHandler',
         'phpdoc'        => 'PI_PHPDOCHandler',
+    );
+
+    protected static $builtinTypes = array(
+        "bool", "boolean",
+        "int", "integer",
+        "float", "double", "real",
+        "array", "null", "object", "resource", "string"
     );
 
     public function __construct() {
@@ -391,16 +404,13 @@ abstract class Package_PHP_XHTML extends Package_Generic_XHTML {
     }
 
     public function format_type_tag_methodsynopsis($open, $tag, $attrs, $props) {
-        if ($open) {
-            return '<span class="type">';
-        }
-
-        // Trailing space intentional as phpdoc doesn't have a
-        // space between <type> and the <methodname> in methodsynopsis
-        return '</span> ';
+        // Empty return here is intentional - value of the tag is fetched using
+        // format_type_methodsynopsis_text() and then appended to the function
+        // signature.
+        return '';
     }
     public function format_type_if_object_or_pseudo_text($type, $tagname) {
-        if (in_array(strtolower($type), array("bool", "int", "double", "boolean", "integer", "float", "string", "array", "object", "resource", "null"))) {
+        if (in_array(strtolower($type), self::$builtinTypes)) {
             return false;
         }
         return self::format_type_text($type, $tagname);
@@ -733,6 +743,68 @@ abstract class Package_PHP_XHTML extends Package_Generic_XHTML {
             return $retval;
         }
         return $this->format_container_chunk($open, "reference", $attrs, $props);
+    }
+
+    public function format_methodparam($open, $name, $attrs) {
+        if ($open) {
+            $content = '';
+                if ($this->params["count"] == 0) {
+                    $content .= " (";
+                }
+                if (isset($attrs[Reader::XMLNS_DOCBOOK]["choice"]) && $attrs[Reader::XMLNS_DOCBOOK]["choice"] == "opt") {
+                    $this->params["opt"]++;
+                    $content .= "[";
+                } else if($this->params["opt"]) {
+                    $content .= str_repeat("]", $this->params["opt"]);
+                    $this->params["opt"] = 0;
+                }
+                if ($this->params["count"]) {
+                    $content .= ",";
+                }
+                $content .= ' <span class="methodparam">';
+                ++$this->params["count"];
+                return $content;
+        }
+        return "</span>";
+    }
+
+    public function format_methodparam_parameter($open, $name, $attrs, $props)
+    {
+        if ($props["empty"]) {
+            return '';
+        }
+        if ($open) {
+            if (isset($attrs[Reader::XMLNS_DOCBOOK]["role"])) {
+                return ' <code class="parameter reference">&$';
+            }
+            return ' <code class="parameter">$';
+        }
+        return "</code>";
+    }
+
+    public function format_methodsynopsis($open, $name, $attrs) {
+        if ($open) {
+            $this->params = array("count" => 0, "opt" => 0, "content" => "", "returns" => "");
+            $id = (isset($attrs[Reader::XMLNS_XML]["id"]) ? ' id="'.$attrs[Reader::XMLNS_XML]["id"].'"' : '');
+            return '<div class="'.$name.' dc-description"'.$id.'>';
+        }
+
+        $content = "";
+        if ($this->params["opt"]) {
+            $content = str_repeat("]", $this->params["opt"]);
+        }
+        $content .= ' ): <span class="type">' . $this->params["returns"] . '</span>';
+
+        $content .= "</div>\n";
+
+        return $content;
+    }
+
+    public function format_type_methodsynopsis_text($value, $tag) {
+        if (!in_array(strtolower($value), self::$builtinTypes)) {
+            $value = $this->format_type_text($value, $tag);
+        }
+        $this->params["returns"] = $value;
     }
 
 }
