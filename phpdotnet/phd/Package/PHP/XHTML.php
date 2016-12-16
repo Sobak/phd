@@ -750,15 +750,7 @@ abstract class Package_PHP_XHTML extends Package_Generic_XHTML {
             $content = '';
                 if ($this->params["count"] == 0) {
                     $content .= " (";
-                }
-                if (isset($attrs[Reader::XMLNS_DOCBOOK]["choice"]) && $attrs[Reader::XMLNS_DOCBOOK]["choice"] == "opt") {
-                    $this->params["opt"]++;
-                    $content .= "[";
-                } else if($this->params["opt"]) {
-                    $content .= str_repeat("]", $this->params["opt"]);
-                    $this->params["opt"] = 0;
-                }
-                if ($this->params["count"]) {
+                } else {
                     $content .= ",";
                 }
                 $content .= ' <span class="methodparam">';
@@ -784,17 +776,12 @@ abstract class Package_PHP_XHTML extends Package_Generic_XHTML {
 
     public function format_methodsynopsis($open, $name, $attrs) {
         if ($open) {
-            $this->params = array("count" => 0, "opt" => 0, "content" => "", "returns" => "");
+            $this->params = array("count" => 0, "content" => "", "returns" => "");
             $id = (isset($attrs[Reader::XMLNS_XML]["id"]) ? ' id="'.$attrs[Reader::XMLNS_XML]["id"].'"' : '');
             return '<div class="'.$name.' dc-description"'.$id.'>';
         }
 
-        $content = "";
-        if ($this->params["opt"]) {
-            $content = str_repeat("]", $this->params["opt"]);
-        }
-        $content .= ' ): <span class="type">' . $this->params["returns"] . '</span>';
-
+        $content = ' ): <span class="type">' . $this->params["returns"] . '</span>';
         $content .= "</div>\n";
 
         return $content;
